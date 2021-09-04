@@ -1,4 +1,5 @@
 import { wasm_request_type } from './interface';
+
 onmessage = async (event: MessageEvent<string>) => {
   try {
     const wasm_request: wasm_request_type | wasm_request_type[] = JSON.parse(event.data);
