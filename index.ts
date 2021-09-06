@@ -1,10 +1,11 @@
+import { config } from './../../../../config';
 import { wasm_request_type } from './interface';
 import loader, { ASUtil } from '@assemblyscript/loader';
 
 export async function wasm_init(wasm_request: wasm_request_type | wasm_request_type[]): Promise<ASUtil> {
   const get_asc = () =>
     new Promise((resolve: (value: unknown) => void) => {
-      const worker = new Worker(`/assets/web-worker/wasm/worker.js`);
+      const worker = new Worker(`${config.base_url}/assets/web-worker/wasm/worker.js`);
       worker.postMessage(JSON.stringify(wasm_request));
 
       const message_handler = async (event: MessageEvent) => {
