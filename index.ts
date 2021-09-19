@@ -2,7 +2,7 @@ import { config } from './../../../../config';
 import { wasm_request_type } from './interface';
 import loader, { ASUtil } from '@assemblyscript/loader';
 
-export async function wasm_init(wasm_request: wasm_request_type | wasm_request_type[]): Promise<ASUtil> {
+export async function wasm_init(wasm_request: wasm_request_type | wasm_request_type[], memory: WebAssembly.Memory): Promise<ASUtil> {
   const get_asc = () =>
     new Promise((resolve: (value: unknown) => void) => {
       const worker = new Worker(`${config.base_url}/assets/web-worker/wasm/worker.js`);
@@ -11,38 +11,39 @@ export async function wasm_init(wasm_request: wasm_request_type | wasm_request_t
       const message_handler = async (event: MessageEvent) => {
         // if (event.data[0] === url) {
         worker.removeEventListener('message', message_handler);
+        let asc: ASUtil;
 
         //   const array_buffer: ArrayBuffer = event.data[1];
-        //   //   const imports = {
-        //   //     /* imports go here */
-        //   //     // env: { memory },
-        //   //     console: {
-        //   //       'console.log': (ptr: number) => {
-        //   //         const asc = (ascs as { [key: string]: any })[worker_name];
-        //   //         asc && console.log(asc.__getString(ptr));
-        //   //       },
-        //   //       'console.logi': (i: number) => {
-        //   //         console.log(i);
-        //   //       },
-        //   //       'console.logf': (f: number) => {
-        //   //         console.log(f);
-        //   //       },
-        //   //       'console.logj': (ptr: number) => {
-        //   //         try {
-        //   //           const asc = (ascs as { [key: string]: any })[worker_name];
-        //   //           asc && console.log(JSON.parse(asc.__getString(ptr)));
-        //   //         } catch (err) {
-        //   //           console.error(err);
-        //   //         }
-        //   //       }
-        //   //     }
-        //   //   };
+        const imports = {
+          /* imports go here */
+          env: { memory },
+          console: {
+            'console.log': (ptr: number) => {
+              asc && console.log(asc.__getString(ptr));
+            },
+            'console.logi': (i: number) => {
+              console.log(i);
+            },
+            'console.logf': (f: number) => {
+              console.log(f);
+            },
+            'console.logj': (ptr: number) => {
+              try {
+                asc && console.log(JSON.parse(asc.__getString(ptr)));
+              } catch (err) {
+                console.error(err);
+              }
+            }
+          }
+        };
+
+        asc = (await loader.instantiate(event.data[1], imports)).exports as unknown as ASUtil;
 
         //   (ascs as { [key: string]: any })[worker_name] = {
         //     ...((await loader.instantiate(array_buffer)).exports as ASUtil),
         //     ...(ascs as { [key: string]: any })[worker_name]
         //   };
-        resolve((await loader.instantiate(event.data[1])).exports as unknown as ASUtil);
+        resolve(asc);
         // }
       };
       worker.addEventListener('message', message_handler);
