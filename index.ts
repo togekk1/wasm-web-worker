@@ -2,7 +2,11 @@ import { config } from './../../../../config';
 import { wasm_request_type } from './interface';
 import loader, { ASUtil } from '@assemblyscript/loader';
 
-export async function wasm_init(wasm_request: wasm_request_type | wasm_request_type[], memory: WebAssembly.Memory): Promise<ASUtil> {
+export async function wasm_init(
+  wasm_request: wasm_request_type | wasm_request_type[],
+  memory?: WebAssembly.Memory,
+  custom_imports?: loader.Imports
+): Promise<ASUtil> {
   const get_asc = () =>
     new Promise((resolve: (value: unknown) => void) => {
       const worker = new Worker(`${config.base_url}/assets/web-worker/wasm/worker.js`);
@@ -14,9 +18,10 @@ export async function wasm_init(wasm_request: wasm_request_type | wasm_request_t
         let asc: ASUtil;
 
         //   const array_buffer: ArrayBuffer = event.data[1];
+
         const imports = {
           /* imports go here */
-          env: { memory },
+          ...(memory ? { env: { memory } } : {}),
           console: {
             'console.log': (ptr: number) => {
               asc && console.log(asc.__getString(ptr));
@@ -34,7 +39,8 @@ export async function wasm_init(wasm_request: wasm_request_type | wasm_request_t
                 console.error(err);
               }
             }
-          }
+          },
+          ...custom_imports
         };
 
         asc = (await loader.instantiate(event.data[1], imports)).exports as unknown as ASUtil;
