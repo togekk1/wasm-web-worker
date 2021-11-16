@@ -1,7 +1,15 @@
 {
   "name": "wasm",
-  "packageManager": "yarn@3.0.1",
+  "version": "1.0.0-alpha1",
+  "repository": "https://github.com/togekk1/assemblyscript-functions.git",
+  "author": "togekk1",
+  "license": "MIT",
   "scripts": {
-    "build": "yarn dlx uglify-js worker.js -c -m -o worker.js"
+    "build": "tsc -p tsconfig.json && uglifyjs lib/worker.js -c -m -o lib/worker.js && uglifyjs lib/loader.js -c -m -o lib/loader.js && tsc -p tsconfig-index.json && uglifyjs index.js -c -m -o index.js"
+  },
+  "devDependencies": {
+    "@assemblyscript/loader": "^0.19.20",
+    "typescript": "^4.4.4",
+    "uglify-js": "^3.14.3"
   }
 }

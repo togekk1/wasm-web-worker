@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "ESNEXT",
+    "lib": ["es2016", "DOM"],
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./",
+    "moduleResolution": "node",
+    "declaration": true
+  },
+  "files": ["./index.ts"]
+}
