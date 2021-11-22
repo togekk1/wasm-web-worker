@@ -1,5 +1,5 @@
 {
-  "name": "wasm",
+  "name": "wasm-web-worker",
   "version": "1.0.0-alpha1",
   "repository": "https://github.com/togekk1/assemblyscript-functions.git",
   "author": "togekk1",
