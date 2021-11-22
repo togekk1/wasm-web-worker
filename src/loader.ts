@@ -8,7 +8,7 @@ export async function wasm_init(
   custom_imports?: loader.Imports
 ): Promise<ASUtil> {
   const get_asc = () =>
-    new Promise((resolve: (value: unknown) => void) => {
+    new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
       const worker = new Worker(`${worker_url}`);
       worker.postMessage(JSON.stringify(wasm_request));
 
@@ -43,14 +43,19 @@ export async function wasm_init(
           ...custom_imports
         };
 
-        asc = (await loader.instantiate(event.data[1], imports)).exports as unknown as ASUtil;
+        try {
+          asc = (await loader.instantiate(event.data[1], imports)).exports as unknown as ASUtil;
 
-        //   (ascs as { [key: string]: any })[worker_name] = {
-        //     ...((await loader.instantiate(array_buffer)).exports as ASUtil),
-        //     ...(ascs as { [key: string]: any })[worker_name]
-        //   };
-        resolve(asc);
-        // }
+          //   (ascs as { [key: string]: any })[worker_name] = {
+          //     ...((await loader.instantiate(array_buffer)).exports as ASUtil),
+          //     ...(ascs as { [key: string]: any })[worker_name]
+          //   };
+          resolve(asc);
+          // }
+        } catch (err) {
+          console.error(err);
+          reject();
+        }
       };
       worker.addEventListener('message', message_handler);
     });
