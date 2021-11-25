@@ -1,4 +1,4 @@
-import { wasm_request_type } from './interface';
+import { wasm_request_type } from '../../../../interface';
 
 onmessage = async (event: MessageEvent<string>) => {
   try {

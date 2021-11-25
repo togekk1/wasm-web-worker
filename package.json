@@ -1,11 +1,12 @@
 {
   "name": "wasm-web-worker",
-  "version": "1.0.0-alpha2",
+  "version": "1.0.0-alpha3",
   "repository": "https://github.com/togekk1/assemblyscript-functions.git",
   "author": "togekk1",
   "license": "MIT",
   "scripts": {
-    "build": "tsc -p tsconfig.json && uglifyjs lib/worker.js -c -m -o lib/worker.js && uglifyjs lib/loader.js -c -m -o lib/loader.js && tsc -p tsconfig-index.json && uglifyjs index.js -c -m -o index.js"
+    "build": "tsc -p tsconfig.json && uglifyjs lib/public/assets/web-worker/wasm/worker.js -c -m -o lib/public/assets/web-worker/wasm/worker.js && uglifyjs lib/loader.js -c -m -o lib/loader.js && tsc -p tsconfig-index.json && uglifyjs index.js -c -m -o index.js",
+    "postinstall": "cp -r lib/public $INIT_CWD"
   },
   "devDependencies": {
     "@assemblyscript/loader": "^0.19.20",
