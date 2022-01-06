@@ -1,6 +1,6 @@
 {
   "name": "wasm-web-worker",
-  "version": "1.0.2",
+  "version": "1.0.2-patch",
   "repository": "https://github.com/togekk1/wasm-web-worker.git",
   "author": "togekk1",
   "license": "MIT",
