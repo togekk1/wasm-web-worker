@@ -8,7 +8,7 @@ export async function wasm_init(
 ): Promise<ASUtil> {
   const get_asc = () =>
     new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
-      const worker = new Worker('public/assets/web-worker/wasm/worker.js');
+      const worker = new Worker('assets/web-worker/wasm/worker.js');
       worker.postMessage(JSON.stringify(wasm_request));
 
       const message_handler = async (event: MessageEvent) => {
