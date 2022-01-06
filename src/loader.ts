@@ -2,22 +2,18 @@ import { wasm_request_type } from './interface';
 import loader, { ASUtil } from '@assemblyscript/loader';
 
 export async function wasm_init(
-  worker_url: string,
   wasm_request: wasm_request_type | wasm_request_type[],
   memory?: WebAssembly.Memory,
   custom_imports?: loader.Imports
 ): Promise<ASUtil> {
   const get_asc = () =>
     new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
-      const worker = new Worker(`${worker_url}`);
+      const worker = new Worker('public/assets/web-worker/wasm/worker.js');
       worker.postMessage(JSON.stringify(wasm_request));
 
       const message_handler = async (event: MessageEvent) => {
-        // if (event.data[0] === url) {
         worker.removeEventListener('message', message_handler);
         let asc: ASUtil;
-
-        //   const array_buffer: ArrayBuffer = event.data[1];
 
         const imports = {
           /* imports go here */
@@ -45,13 +41,7 @@ export async function wasm_init(
 
         try {
           asc = (await loader.instantiate(event.data[1], imports)).exports as unknown as ASUtil;
-
-          //   (ascs as { [key: string]: any })[worker_name] = {
-          //     ...((await loader.instantiate(array_buffer)).exports as ASUtil),
-          //     ...(ascs as { [key: string]: any })[worker_name]
-          //   };
           resolve(asc);
-          // }
         } catch (err) {
           console.error(err);
           reject();
