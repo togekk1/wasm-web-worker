@@ -4,11 +4,12 @@ import loader, { ASUtil } from '@assemblyscript/loader';
 export async function wasm_init(
   wasm_request: wasm_request_type | wasm_request_type[],
   memory?: WebAssembly.Memory,
-  custom_imports?: loader.Imports
+  custom_imports?: loader.Imports,
+  base_url?: string
 ): Promise<ASUtil> {
   const get_asc = () =>
     new Promise((resolve: (value: unknown) => void, reject: (reason?: any) => void) => {
-      const worker = new Worker('/assets/web-worker/wasm/worker.js');
+      const worker = new Worker(`${base_url ?? ''}/assets/web-worker/wasm/worker.js`);
       worker.postMessage(JSON.stringify(wasm_request));
 
       const message_handler = async (event: MessageEvent) => {
