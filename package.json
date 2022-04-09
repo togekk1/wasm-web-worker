@@ -9,7 +9,7 @@
     "postinstall": "cp -r lib/public $INIT_CWD"
   },
   "devDependencies": {
-    "@assemblyscript/loader": "^0.19.20",
+    "@assemblyscript/loader": "^0.20.3",
     "typescript": "^4.4.4",
     "uglify-js": "^3.14.3"
   }

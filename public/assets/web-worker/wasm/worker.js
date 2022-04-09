@@ -1,0 +1,1 @@
+onmessage=async a=>{try{const s=JSON.parse(a.data);var r=Array.isArray(s)?Promise.all(s.map(async({url:a,instances:r})=>{var s=async()=>(await fetch(a)).arrayBuffer();return r?Array(r).map(s):s})):await(await fetch(s.url)).arrayBuffer();postMessage(["main",r])}catch(a){console.error(a)}finally{close()}};
